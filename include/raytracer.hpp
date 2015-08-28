@@ -6,6 +6,6 @@
 
 namespace rt {
 	
-	bitmap raytrace(camera const camera, scene const world, size_t const width, size_t const height);
+	bitmap raytrace(camera const camera, scene const& world, size_t const width, size_t const height);
 
 }

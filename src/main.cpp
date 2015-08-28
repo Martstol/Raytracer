@@ -18,28 +18,28 @@ int main(int argc, char * argv[]) {
 	}
 
 	rt::camera camera;
-	camera.position = glm::vec3(0, 0.f, 0.f);
+	camera.position = glm::vec3(-10.f, 0.f, 0.f);
 	camera.direction = glm::vec3(1.f, 0.f, 0.f);
 	camera.up = glm::vec3(0.f, 1.f, 0.f);
 	camera.fov = glm::pi<float>()/3.f;
 
-	scene world;
+	rt::scene world;
 
-	light light;
-	light.position = glm::vec3(-1E9f, 0.f, 1E9f);
+	rt::light light;
+	light.position = glm::vec3(0, 0.f, 1E9f);
 	world.lights.push_back(light);
 
-	sphere s0;
+	rt::sphere s0;
 	s0.center = glm::vec3(5, 0, 0);
-	s0.radius = 5;
+	s0.radius = 1.5f;
 	world.models.push_back(s0);
 
-	sphere s1;
-	s1.center = glm::vec3(14.f, 0, -6.f);
-	s1.radius = 7.5f;
+	rt::sphere s1;
+	s1.center = glm::vec3(5, 0, -6);
+	s1.radius = 3;
 	world.models.push_back(s1);
 
-	auto image = rt::raytrace(camera, width, height);
+	auto image = rt::raytrace(camera, world, width, height);
 	rt::bitmap::save(image, out);
 	return 0;
 }
