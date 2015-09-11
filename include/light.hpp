@@ -6,6 +6,7 @@ namespace rt {
 	
 	struct light {
 		glm::vec3 position;
+		float intensity;
 	};
 
 }
