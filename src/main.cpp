@@ -26,7 +26,8 @@ int main(int argc, char * argv[]) {
 	rt::scene world;
 
 	rt::light light;
-	light.position = glm::vec3(0, 0.f, 1E9f);
+	light.intensity = 1E14f;
+	light.position = glm::vec3(0, 0.f, 1E8f);
 	world.lights.push_back(light);
 
 	rt::sphere s0;

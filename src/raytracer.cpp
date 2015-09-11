@@ -29,6 +29,13 @@ namespace rt {
 		return intersection;
 	}
 
+	float getLightAttenuation(float distance) {
+		float kc = 1.f;
+		float kl = .1f;
+		float kq = .01f;
+		return 1.f / (kc + kl*distance + kq*distance*distance);
+	}
+
 	color getLightContribution(intersection const intersection, light const light, scene const& world) {
 		ray ray;
 		ray.origin = intersection.point + 0.0001f * intersection.normal;
@@ -39,9 +46,10 @@ namespace rt {
 			return color(0);
 		}
 
-		float i = glm::dot(ray.direction, intersection.normal);
+		float distance = glm::distance(light.position, ray.origin);
+		float i = glm::dot(ray.direction, intersection.normal) * light.intensity * getLightAttenuation(distance);
 
-		return color(std::max(0.f, i));
+		return color(glm::clamp(i, 0.f, 1.f));
 	}
 
 	color calculateLocalColorModel(intersection const intersection, scene const& world) {
@@ -82,7 +90,7 @@ namespace rt {
 				ray.origin = camera.position;
 				ray.direction = glm::normalize((center + right*x*pixelSize + camera.up*y*pixelSize) - ray.origin);
 
-				image(col, row) = pixel_t(shootRay(ray, world));
+				image(col, height - (row + 1)) = pixel_t(shootRay(ray, world));
 			}
 		}
 
