@@ -7,26 +7,20 @@
 #include <glm/gtx/intersect.hpp>
 
 #include <iostream>
+#include <cmath>
 
 namespace rt {
 
 	intersection findClosestIntersection(ray const ray, scene const& world) {
-		intersection intersection;
+		intersection isect;
 		for (size_t i = 0; i < world.models.size(); i++) {
-			glm::vec3 point, normal;
-			float distance = 0;
-			sphere const& sphere = world.models[i];
-			if (glm::intersectRaySphere(ray.origin, ray.direction, sphere.center, sphere.radius, point, normal)) {
-				distance = glm::distance(ray.origin, point);
-				if (distance < intersection.distance) {
-					intersection.point = point;
-					intersection.normal = normal;
-					intersection.model = &world.models[i];
-					intersection.distance = distance;
-				}
+			model * model = world.models[i].get();
+			intersection potential = model->intersects(ray);
+			if (potential.model != nullptr && potential.distance < isect.distance) {
+				isect = potential;
 			}
 		}
-		return intersection;
+		return isect;
 	}
 
 	float getLightAttenuation(float distance) {
@@ -68,10 +62,7 @@ namespace rt {
 			return world.bgColor;
 		}
 
-		return calculateLocalColorModel(intersection, world);
-		glm::vec3 const dir = glm::normalize(ray.origin - intersection.point);
-		return color(std::max(0.f, glm::dot(dir, intersection.normal)));
-		
+		return calculateLocalColorModel(intersection, world);	
 	}
 
 	bitmap raytrace(camera const camera, scene const& world, size_t const width, size_t const height) {
@@ -79,7 +70,7 @@ namespace rt {
 		
 		auto const right = glm::cross(camera.direction, camera.up);
 		auto const center = camera.position + camera.direction;
-		float const pixelSize = tan(camera.fov/2.f) / (height/2.f);
+		float const pixelSize = std::tan(camera.fov/2.f) / (height/2.f);
 
 		for (size_t row = 0; row < height; row++) {
 			for (size_t col = 0; col < width; col++) {

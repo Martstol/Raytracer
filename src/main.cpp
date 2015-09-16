@@ -1,12 +1,15 @@
 #include "raytracer.hpp"
+#include "sphere.hpp"
 
 #include <glm/gtx/constants.hpp>
+
+#include <memory>
 
 int main(int argc, char * argv[]) {
 	char const * out = "out.png";
 	size_t width = 640;
 	size_t height = 480;
-	if (argc ==2) {
+	if (argc == 2) {
 		out = argv[1];
 	} else if (argc == 3) {
 		out = argv[1];
@@ -30,15 +33,15 @@ int main(int argc, char * argv[]) {
 	light.position = glm::vec3(0, 0.f, 1E8f);
 	world.lights.push_back(light);
 
-	rt::sphere s0;
-	s0.center = glm::vec3(5, 0, 0);
-	s0.radius = 1.5f;
-	world.models.push_back(s0);
+	auto s0 = std::unique_ptr<rt::sphere>(new rt::sphere());
+	s0->center = glm::vec3(5, 0, 0);
+	s0->radius = 1.5f;
+	world.models.push_back(std::move(s0));
 
-	rt::sphere s1;
-	s1.center = glm::vec3(5, 0, -6);
-	s1.radius = 3;
-	world.models.push_back(s1);
+	auto s1 = std::unique_ptr<rt::sphere>(new rt::sphere());
+	s1->center = glm::vec3(5, 0, -6);
+	s1->radius = 3;
+	world.models.push_back(std::move(s1));
 
 	auto image = rt::raytrace(camera, world, width, height);
 	rt::bitmap::save(image, out);
