@@ -9,4 +9,6 @@ namespace rt {
 		float intensity;
 	};
 
+	float getLightAttenuation(float distance);
+
 }

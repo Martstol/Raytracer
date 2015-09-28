@@ -15,11 +15,13 @@ set(libs
 
 set(incs
 	include/
+	${PNG_INCLUDES}
 )
 
 set(srcs
 	src/main.cpp
 	src/raytracer.cpp
+	src/light.cpp
 )
 
 set(exec raytracer)

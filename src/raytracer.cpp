@@ -23,13 +23,6 @@ namespace rt {
 		return isect;
 	}
 
-	float getLightAttenuation(float distance) {
-		float kc = 1.f;
-		float kl = .1f;
-		float kq = .01f;
-		return 1.f / (kc + kl*distance + kq*distance*distance);
-	}
-
 	color getLightContribution(intersection const intersection, light const light, scene const& world) {
 		ray ray;
 		ray.origin = intersection.point + 0.0001f * intersection.normal;
