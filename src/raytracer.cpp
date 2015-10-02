@@ -9,77 +9,73 @@
 #include <iostream>
 #include <cmath>
 
-namespace rt {
-
-	intersection findClosestIntersection(ray const ray, scene const& world) {
-		intersection isect;
-		for (size_t i = 0; i < world.models.size(); i++) {
-			model * model = world.models[i].get();
-			intersection potential = model->intersects(ray);
-			if (potential.model != nullptr && potential.distance < isect.distance) {
-				isect = potential;
-			}
+rt::intersection findClosestIntersection(rt::ray const ray, rt::scene const& world) {
+	rt::intersection isect;
+	for (size_t i = 0; i < world.models.size(); i++) {
+		rt::model * model = world.models[i].get();
+		rt::intersection potential = model->intersects(ray);
+		if (potential.model != nullptr && potential.distance < isect.distance) {
+			isect = potential;
 		}
-		return isect;
+	}
+	return isect;
+}
+
+rt::color getLightContribution(rt::intersection const intersection, rt::light const light, rt::scene const& world) {
+	rt::ray ray;
+	ray.origin = intersection.point + 0.0001f * intersection.normal;
+	ray.direction = glm::normalize(light.position - ray.origin);
+
+	auto occlusion = findClosestIntersection(ray, world);
+	if (occlusion.model != nullptr) {
+		return rt::color(0);
 	}
 
-	color getLightContribution(intersection const intersection, light const light, scene const& world) {
-		ray ray;
-		ray.origin = intersection.point + 0.0001f * intersection.normal;
-		ray.direction = glm::normalize(light.position - ray.origin);
+	float distance = glm::distance(light.position, ray.origin);
+	float i = glm::dot(ray.direction, intersection.normal) * light.intensity * rt::getLightAttenuation(distance);
 
-		auto occlusion = findClosestIntersection(ray, world);
-		if (occlusion.model != nullptr) {
-			return color(0);
-		}
+	return rt::color(glm::clamp(i, 0.f, 1.f));
+}
 
-		float distance = glm::distance(light.position, ray.origin);
-		float i = glm::dot(ray.direction, intersection.normal) * light.intensity * getLightAttenuation(distance);
+rt::color calculateLocalColorModel(rt::intersection const intersection, rt::scene const& world) {
+	rt::color color(0);
 
-		return color(glm::clamp(i, 0.f, 1.f));
+	for (rt::light const & light : world.lights) {
+		color += getLightContribution(intersection, light, world);
 	}
 
-	color calculateLocalColorModel(intersection const intersection, scene const& world) {
-		color color(0);
+	return color;
+}
 
-		for (light const light : world.lights) {
-			color += getLightContribution(intersection, light, world);
-		}
-
-		return color;
+rt::color shootRay(rt::ray const ray, rt::scene const& world) {
+	rt::intersection const intersection = findClosestIntersection(ray, world);
+	if (intersection.model == nullptr) {
+		return world.bgColor;
 	}
 
-	color shootRay(ray const ray, scene const& world) {
-		intersection const intersection = findClosestIntersection(ray, world);
-		if (intersection.model == nullptr) {
-			return world.bgColor;
-		}
+	return calculateLocalColorModel(intersection, world);	
+}
 
-		return calculateLocalColorModel(intersection, world);	
+rt::bitmap rt::raytrace(rt::camera const camera, rt::scene const& world, size_t const width, size_t const height) {
+	rt::bitmap image(width, height);
+	
+	auto const right = glm::cross(camera.direction, camera.up);
+	auto const center = camera.position + camera.direction;
+	float const pixelSize = std::tan(camera.fov/2.f) / (height/2.f);
+
+	for (size_t row = 0; row < height; row++) {
+		for (size_t col = 0; col < width; col++) {
+		float const x = col - width / 2.f;
+			float const y = row - height / 2.f;
+
+			rt::ray ray;
+			ray.origin = camera.position;
+			ray.direction = glm::normalize((center + right*x*pixelSize + camera.up*y*pixelSize) - ray.origin);
+
+			image(col, height - (row + 1)) = rt::pixel_t(shootRay(ray, world));
+		}
 	}
 
-	bitmap raytrace(camera const camera, scene const& world, size_t const width, size_t const height) {
-		bitmap image(width, height);
-		
-		auto const right = glm::cross(camera.direction, camera.up);
-		auto const center = camera.position + camera.direction;
-		float const pixelSize = std::tan(camera.fov/2.f) / (height/2.f);
-
-		for (size_t row = 0; row < height; row++) {
-			for (size_t col = 0; col < width; col++) {
-				float const x = col - width / 2.f;
-				float const y = row - height / 2.f;
-
-				ray ray;
-				ray.origin = camera.position;
-				ray.direction = glm::normalize((center + right*x*pixelSize + camera.up*y*pixelSize) - ray.origin);
-
-				image(col, height - (row + 1)) = pixel_t(shootRay(ray, world));
-			}
-		}
-
-		return image;
-	}
-
+	return image;
 }
 

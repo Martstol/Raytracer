@@ -8,6 +8,7 @@ namespace rt {
 	struct model {
 
 		virtual intersection intersects(ray ray) const = 0;
+		virtual ~model();
 		
 	};
 

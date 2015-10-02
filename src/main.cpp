@@ -4,6 +4,7 @@
 #include <glm/gtx/constants.hpp>
 
 #include <memory>
+#include <utility>
 
 int main(int argc, char * argv[]) {
 	char const * out = "out.png";
@@ -13,11 +14,11 @@ int main(int argc, char * argv[]) {
 		out = argv[1];
 	} else if (argc == 3) {
 		out = argv[1];
-		width = height = atoi(argv[2]);
+		width = height = static_cast<size_t>(atoi(argv[2]));
 	} else if (argc == 4) {
 		out = argv[1];
-		width = atoi(argv[2]);
-		height = atoi(argv[3]);
+		width = static_cast<size_t>(atoi(argv[2]));
+		height = static_cast<size_t>(atoi(argv[3]));
 	}
 
 	rt::camera camera;

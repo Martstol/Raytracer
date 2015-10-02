@@ -7,7 +7,8 @@ add_definitions(-DGLM_FORCE_RADIANS)
 
 find_package(PNG REQUIRED)
 
-list(APPEND CMAKE_CXX_FLAGS "-std=c++11 -Weverything -Wno-c++98-compat -pedantic -g -O0 -march=native")
+list(APPEND CMAKE_CXX_FLAGS "-std=c++11 -Weverything -Wno-c++98-compat -Wno-shadow -pedantic -g -O0 -march=native")
+# list(APPEND CMAKE_CXX_FLAGS "-std=c++11 -Weverything -Wno-c++98-compat -Wno-shadow -pedantic -O3 -march=native")
 
 set(libs
 	${PNG_LIBRARIES}
@@ -22,9 +23,13 @@ set(srcs
 	src/main.cpp
 	src/raytracer.cpp
 	src/light.cpp
+	src/model.cpp
+	src/sphere.cpp
 )
 
 set(exec raytracer)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 include_directories(${incs})
 

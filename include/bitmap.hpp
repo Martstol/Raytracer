@@ -17,10 +17,13 @@ namespace rt {
 		explicit pixel_t(uint8_t i) : r(i), g(i), b(i), a(255) {}
 		pixel_t(uint8_t r, uint8_t g, uint8_t b) : r(r), g(g), b(b), a(255) {}
 		pixel_t(uint8_t r, uint8_t g, uint8_t b, uint8_t a) : r(r), g(g), b(b), a(a) {}
-		explicit pixel_t(color c) : r(255*c.r), g(255*c.g), b(255*c.b), a(255) {}
+		explicit pixel_t(color c) :
+			r(static_cast<uint8_t>(255*c.r)),
+			g(static_cast<uint8_t>(255*c.g)),
+			b(static_cast<uint8_t>(255*c.b)),
+			a(255)
+		{}
 	};
-	
-	using size_t = std::size_t;
 
 	struct bitmap {
 		private:
