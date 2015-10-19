@@ -20,7 +20,7 @@ set(incs
 	${PNG_INCLUDES}
 )
 
-set(srcs src/*.cpp)
+file(GLOB srcs "src/*.cpp")
 
 set(exec raytracer)
 
