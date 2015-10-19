@@ -37,11 +37,13 @@ int main(int argc, char * argv[]) {
 	auto s0 = std::unique_ptr<rt::sphere>(new rt::sphere());
 	s0->center = glm::vec3(5, 0, 0);
 	s0->radius = 1.5f;
+	s0->c = rt::color(1.f, .2f, .2f);
 	world.models.push_back(std::move(s0));
 
 	auto s1 = std::unique_ptr<rt::sphere>(new rt::sphere());
 	s1->center = glm::vec3(5, 0, -6);
 	s1->radius = 3;
+	s1->c = rt::color(.2f, 1.f, .2f);
 	world.models.push_back(std::move(s1));
 
 	auto image = rt::raytrace(camera, world, width, height);

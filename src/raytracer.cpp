@@ -34,17 +34,17 @@ rt::color getLightContribution(rt::intersection const intersection, rt::light co
 	float distance = glm::distance(light.position, ray.origin);
 	float i = glm::dot(ray.direction, intersection.normal) * light.intensity * rt::getLightAttenuation(distance);
 
-	return rt::color(glm::clamp(i, 0.f, 1.f));
+	return rt::color(i);
 }
 
 rt::color calculateLocalColorModel(rt::intersection const intersection, rt::scene const& world) {
-	rt::color color(0);
+	rt::color lightColor(0);
 
 	for (rt::light const & light : world.lights) {
-		color += getLightContribution(intersection, light, world);
+		lightColor += getLightContribution(intersection, light, world);
 	}
 
-	return color;
+	return intersection.model->getColor()*glm::clamp(lightColor, 0.f, 1.f);
 }
 
 rt::color shootRay(rt::ray const ray, rt::scene const& world) {

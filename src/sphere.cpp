@@ -14,3 +14,7 @@ rt::intersection rt::sphere::intersects(rt::ray ray) const {
 	return isect;
 }
 
+rt::color rt::sphere::getColor() const {
+	return c;
+}
+

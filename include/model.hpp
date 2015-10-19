@@ -2,6 +2,7 @@
 
 #include "ray.hpp"
 #include "intersection.hpp"
+#include "color.hpp"
 
 namespace rt {
 
@@ -9,6 +10,7 @@ namespace rt {
 
 		virtual intersection intersects(ray ray) const = 0;
 		virtual ~model();
+		virtual color getColor() const = 0;
 		
 	};
 
