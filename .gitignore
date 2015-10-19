@@ -27,5 +27,3 @@
 *.out
 *.app
 
-build/
-*.swp

@@ -20,17 +20,9 @@ set(incs
 	${PNG_INCLUDES}
 )
 
-set(srcs
-	src/main.cpp
-	src/raytracer.cpp
-	src/light.cpp
-	src/model.cpp
-	src/sphere.cpp
-)
+set(srcs src/*.cpp)
 
 set(exec raytracer)
-
-set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
 include_directories(${incs})
 
