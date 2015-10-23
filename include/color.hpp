@@ -4,7 +4,7 @@
 
 namespace rt {
 
-	using color = glm::vec3;
+	using Color = glm::vec3;
 
 }
 

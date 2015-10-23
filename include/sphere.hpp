@@ -7,13 +7,13 @@
 
 namespace rt {
 
-	struct sphere : model {
+	struct Sphere : Model {
 		glm::vec3 center;
 		float radius;
 		color c;
 
-		virtual intersection intersects(ray ray) const override;
-		virtual color getColor() const override;
+		virtual Intersection intersects(ray ray) const override;
+		virtual Color getColor() const override;
 	};
 
 }

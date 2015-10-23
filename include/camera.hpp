@@ -3,7 +3,7 @@
 #include <glm/glm.hpp>
 
 namespace rt {
-	struct camera {
+	struct Camera {
 		glm::vec3 position;
 		glm::vec3 direction;
 		glm::vec3 up;

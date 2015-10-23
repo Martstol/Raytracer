@@ -6,10 +6,10 @@
 
 namespace rt {
 
-	struct model {
+	struct Model {
 
 		virtual intersection intersects(ray ray) const = 0;
-		virtual ~model();
+		virtual ~Model();
 		virtual color getColor() const = 0;
 		
 	};

@@ -6,10 +6,10 @@
 
 namespace rt {
 
-	struct model;
+	struct Model;
 	
-	struct intersection {
-		model const * model = nullptr;
+	struct Intersection {
+		Model const * model = nullptr;
 		glm::vec3 normal;
 		glm::vec3 point;
 		float distance = std::numeric_limits<float>::infinity();
